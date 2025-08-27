@@ -15,11 +15,16 @@ from mistralai import Mistral
 from typing_extensions import override
 from openai import AssistantEventHandler
 
-# Access the keys safely
-openai_api_key = 'sk-'
-claude_api_key = 'sk-..'
-mixtral_api_key = ''
-deepseek_api_key = 'sk-..'
+# Load environment variables from .env file
+from dotenv import load_dotenv
+load_dotenv()
+
+# Access the keys from environment variables
+openai_api_key = os.getenv('OPENAI_API_KEY', '')
+claude_api_key = os.getenv('CLAUDE_API_KEY', '')
+mixtral_api_key = os.getenv('MIXTRAL_API_KEY', '')
+deepseek_api_key = os.getenv('DEEPSEEK_API_KEY', '')
+nvidia_nim_api_key = os.getenv('NVIDIA_NIM_API_KEY', '')
 
 def save_dataset_item(dataset_item, json_file_path="dataset.json"):
     """
@@ -145,7 +150,7 @@ def extract_code(text):
     return code_blocks
 
 
-def LLM_answer_code_checker(question, response, check_code_saving_path):
+def LLM_answer_code_checker(question, response, check_code_saving_path, model_name='R1_CI_14B_NIM'):
     Input_prompt = f'{Code_checker_prompt}\nThe question is:\n{question}\nThe response is:\n{response}\nYour checking code:\n'
     user_prompt_list = [Input_prompt]; response_list = []
     max_retries = 3
@@ -154,7 +159,15 @@ def LLM_answer_code_checker(question, response, check_code_saving_path):
         code_block_list = []
         # If no code blocks found, retry up to 2 more times
         for iteration in range(5):
-            response_check = GPT_response('', Input_prompt, model_name='gpt-4o', code_interpreter=False,
+            # Use the provided model_name (defaults to NIM if not specified)
+            if model_name.endswith('_NIM'):
+                # Use NIM model for checking
+                check_model = model_name
+            else:
+                # For non-NIM models, skip checking or use a default NIM model
+                check_model = 'R1_CI_14B_NIM'  # Default to NIM model for checking
+            
+            response_check = GPT_response('', Input_prompt, model_name=check_model, code_interpreter=False,
                                           user_prompt_list=user_prompt_list, response_total_list=response_list, logprobs=False)
             code_block_list = extract_code(response_check)
             if len(code_block_list) > 0:
@@ -266,12 +279,14 @@ def GPT_response_once(system_message, question, model_name, code_interpreter, us
     openai_api_key_name = openai_api_key
     claude_api_key_name = claude_api_key
     mixtral_api_key_name = mixtral_api_key
+    nvidia_nim_api_key_name = nvidia_nim_api_key
 
     if model_name not in ['o3-mini-2025-01-31', "o1", "o1-preview", 'o1-mini', 'gpt-4o', 'gpt-4o-mini', 'gpt-35-turbo-16k-0613', 'gpt-4-turbo', 'gpt-3.5-turbo-0125', 'gpt-3.5-turbo',
                           "claude-3-5-sonnet-20241022", "claude-3-sonnet-20240229", "claude-3-opus-20240229", "claude-3-haiku-20240307",
                           'open-mixtral-8x7b', "mistral-large-latest",
                           'CodeLlama-34b', 'CodeLlama-70b', 'Qwen2.5-32B',
-                          'DeepSeek-R1', 'DeepSeek-V3']:
+                          'DeepSeek-R1', 'DeepSeek-V3',
+                          'R1_CI_14B_NIM', 'R1_CI_7B_NIM', 'R1_CI_3B_NIM', 'Qwen_NIM']:
         print('\nModel name is wrong!')
         raise ValueError("Invalid model name!")
     if model_name == 'gpt-35-turbo-16k-0613':
@@ -362,6 +377,37 @@ def GPT_response_once(system_message, question, model_name, code_interpreter, us
                 args_path = '/n/vlassak_lab/Lab/simulation_data/NLP_robotics/experiment/T5/large_model/llama3/LLaMA_Factory/examples/inference/qwen2_code.yaml'
             response = run_response(messages, args_path)
             return response
+        elif model_name in ['R1_CI_14B_NIM', 'R1_CI_7B_NIM', 'R1_CI_3B_NIM', 'Qwen_NIM']:
+            # NVIDIA NIM API support using OpenAI-compatible client
+            if not nvidia_nim_api_key_name:
+                raise ValueError("NVIDIA_NIM_API_KEY not found in environment variables")
+            
+            # Map model names to NIM model identifiers (using available models on NIM)
+            nim_model_map = {
+                'R1_CI_14B_NIM': 'nvidia/llama-3.1-nemotron-70b-instruct',  # Using 70B as substitute for 14B
+                'R1_CI_7B_NIM': 'meta/llama-3.1-8b-instruct',  # Using 8B as substitute for 7B
+                'R1_CI_3B_NIM': 'meta/llama3-8b-instruct',  # Using 8B as substitute for 3B
+                'Qwen_NIM': 'nvidia/llama-3.1-nemotron-70b-instruct'  # Using Nemotron as Qwen substitute
+            }
+            
+            nim_model = nim_model_map.get(model_name, 'nvidia/llama-3.1-nemotron-70b-instruct')
+            
+            client = OpenAI(
+                api_key=nvidia_nim_api_key_name,
+                base_url="https://integrate.api.nvidia.com/v1"
+            )
+            
+            response = client.chat.completions.create(
+                model=nim_model,
+                messages=input_messages,
+                max_tokens=max_tokens_num,
+                temperature=temperature,
+                top_p=1,
+                frequency_penalty=0,
+                presence_penalty=0
+            )
+            
+            return response.choices[0].message.content
 
     elif code_interpreter == True:
         client = OpenAI(api_key=openai_api_key_name)

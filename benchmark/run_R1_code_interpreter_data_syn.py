@@ -63,7 +63,8 @@ def answer_sampling_func(model_name, args_path, user_prompt_list, response_list,
     if model_name in ['o3-mini-2025-01-31', 'o1', "o1-preview", 'o1-mini', 'gpt-4o', 'gpt-4o-mini', 'gpt-3.5-turbo',
                       "claude-3-5-sonnet-20241022", "claude-3-sonnet-20240229",
                       "claude-3-opus-20240229", "claude-3-haiku-20240307", 'open-mixtral-8x7b', "mistral-large-latest",
-                      'DeepSeek-R1', 'DeepSeek-V3']:
+                      'DeepSeek-R1', 'DeepSeek-V3',
+                      'R1_CI_14B_NIM', 'R1_CI_7B_NIM', 'R1_CI_3B_NIM', 'Qwen_NIM']:
         response = GPT_response('', user_prompt_list[-1], model_name=model_name, code_interpreter=code_interpreter,
                                 user_prompt_list=user_prompt_list, response_total_list=response_list, logprobs=False)
     else:
@@ -309,7 +310,7 @@ def run_logic_game_baselines(task_name, gather_save_input_dir, model_name, basel
                         response = response + f'\nThe execution result from the generated code is:\nerrors: {errors}'
 
                 check_code_saving_path = save_code_dir + f"/check_code_1_{round_num}.py"
-                check_result = LLM_answer_code_checker(question, response, check_code_saving_path)
+                check_result = LLM_answer_code_checker(question, response, check_code_saving_path, model_name=model_name)
 
                 CodeSteer_input_prompt_head = f'''{decision_prompt_complex_code} {question}\n'''
                 if len(code_block_list) > 0:

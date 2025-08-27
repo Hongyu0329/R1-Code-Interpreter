@@ -18,6 +18,10 @@ import math
 from dataclasses import dataclass
 from prompt import *
 from symbolic_code_check import analyze_code_and_explain
+
+# Default model for extraction and verification functions
+# Using NIM model instead of OpenAI to avoid API key issues
+DEFAULT_EXTRACTION_MODEL = 'R1_CI_14B_NIM'
 import reasoning_gym
 #from LLaMA_Factory.src.llamafactory.chat.chat_model import run_response
 
@@ -1819,7 +1823,7 @@ def extract_equation_with_GPT4_combi_calcu(response):
              'Also complete expression like (9 + 9) + (4 + 6) should be corrected to list of items [(, 9, +, 9, ), +, (, 4, +, 6, )]\n' \
              'Input text: ' \
 
-    extract_equation = GPT_response('', prompt + response, model_name='gpt-4o', code_interpreter=False, user_prompt_list = [prompt + response], response_total_list = [], logprobs = False)
+    extract_equation = GPT_response('', prompt + response, model_name=DEFAULT_EXTRACTION_MODEL, code_interpreter=False, user_prompt_list = [prompt + response], response_total_list = [], logprobs = False)
     return extract_equation
 
 ##### Logical Equation #####
@@ -1863,7 +1867,7 @@ def extract_equation_with_GPT4_logical_equation(response):
              'Note that if you find no final answer is answered, then directly answer empty list <<<[]>>.\n' \
              'Input text: ' \
 
-    extract_equation = GPT_response('', prompt + response, model_name='gpt-4o', code_interpreter=False, user_prompt_list = [prompt + response], response_total_list = [], logprobs = False)
+    extract_equation = GPT_response('', prompt + response, model_name=DEFAULT_EXTRACTION_MODEL, code_interpreter=False, user_prompt_list = [prompt + response], response_total_list = [], logprobs = False)
     return extract_equation
 
 def verify_solution_logical_equation(example_solution: List[int], proposed_solution: List[int], constraints: List[str]) -> bool:
@@ -2005,7 +2009,7 @@ def extract_equation_with_GPT4_eight_queens(response):
              'Note that if you find no final answer is answered, then directly answer <<<0 0>>. If the initial answer follows wrong format, then correct it.\n' \
              'Input text: ' \
 
-    extract_equation = GPT_response('', prompt + response, model_name='gpt-4o', code_interpreter=False, user_prompt_list = [prompt + response], response_total_list = [], logprobs = False)
+    extract_equation = GPT_response('', prompt + response, model_name=DEFAULT_EXTRACTION_MODEL, code_interpreter=False, user_prompt_list = [prompt + response], response_total_list = [], logprobs = False)
     return extract_equation
 
 
@@ -2100,7 +2104,7 @@ def extract_equation_with_GPT4_syn_decom(response):
              'Note that if you find no final answer is answered, then directly answer <<<0>>>. If the initial answer follows wrong format, then correct it.\n' \
              'Input text: ' \
 
-    extract_equation = GPT_response('', prompt + response, model_name='gpt-4o', code_interpreter=False, user_prompt_list = [prompt + response], response_total_list = [], logprobs = False)
+    extract_equation = GPT_response('', prompt + response, model_name=DEFAULT_EXTRACTION_MODEL, code_interpreter=False, user_prompt_list = [prompt + response], response_total_list = [], logprobs = False)
     return extract_equation
 
 
@@ -2163,7 +2167,7 @@ def extract_equation_with_GPT4_mahjong(response):
              'Note that if you find no final answer is answered, then directly answer <<<-1>>>. If the initial answer follows wrong format, then correct it.\n' \
              'Input text: '
 
-    extract_equation = GPT_response('', prompt + response, model_name='gpt-4o', code_interpreter=False,
+    extract_equation = GPT_response('', prompt + response, model_name=DEFAULT_EXTRACTION_MODEL, code_interpreter=False,
                                             user_prompt_list=[prompt + response], response_total_list=[],
                                             logprobs=False)
     return extract_equation
@@ -2227,7 +2231,7 @@ def extract_equation_with_GPT4_stat_counting(response):
              'Note that if you find no final answer is answered, then directly answer <<<0>>>. If the initial answer follows wrong format, then correct it.\n' \
              'Input text: '
 
-    extract_equation = GPT_response('', prompt + response, model_name='gpt-4o', code_interpreter=False,
+    extract_equation = GPT_response('', prompt + response, model_name=DEFAULT_EXTRACTION_MODEL, code_interpreter=False,
                                             user_prompt_list=[prompt + response], response_total_list=[],
                                             logprobs=False)
     return extract_equation
@@ -2295,7 +2299,7 @@ def extract_equation_with_GPT4_new_op(response):
              'Note that if you find no final answer is answered, then directly answer <<<0>>>. If the initial answer follows wrong format, then correct it.\n' \
              'Input text: '
 
-    extract_equation = GPT_response('', prompt + response, model_name='gpt-4o', code_interpreter=False,
+    extract_equation = GPT_response('', prompt + response, model_name=DEFAULT_EXTRACTION_MODEL, code_interpreter=False,
                                             user_prompt_list=[prompt + response], response_total_list=[],
                                             logprobs=False)
     return extract_equation
@@ -2365,7 +2369,7 @@ def extract_equation_with_GPT4_light(response):
              'Note that if you find no final answer is answered, then directly answer <<<0>>>. If the initial answer follows wrong format, then correct it.\n' \
              'Input text: '
 
-    extract_equation = GPT_response('', prompt + response, model_name='gpt-4o', code_interpreter=False,
+    extract_equation = GPT_response('', prompt + response, model_name=DEFAULT_EXTRACTION_MODEL, code_interpreter=False,
                                             user_prompt_list=[prompt + response], response_total_list=[],
                                             logprobs=False)
     return extract_equation
@@ -2436,7 +2440,7 @@ def extract_equation_with_GPT4_reversi(response):
              'Ignore any newline character in the answer. Note that if you find no final answer is answered, then directly answer <<<0>>>. If the initial answer follows wrong format, then correct it.\n' \
              'Input text: '
 
-    extract_equation = GPT_response('', prompt + response, model_name='gpt-4o', code_interpreter=False,
+    extract_equation = GPT_response('', prompt + response, model_name=DEFAULT_EXTRACTION_MODEL, code_interpreter=False,
                                             user_prompt_list=[prompt + response], response_total_list=[],
                                             logprobs=False)
     return extract_equation
@@ -2507,7 +2511,7 @@ def extract_equation_with_GPT4_matrix_trans(response):
              'Note that if you find no final answer is answered, then directly answer <<<0>>>. If the initial answer follows wrong format, then correct it.\n' \
              'Input text: '
 
-    extract_equation = GPT_response('', prompt + response, model_name='gpt-4o', code_interpreter=False,
+    extract_equation = GPT_response('', prompt + response, model_name=DEFAULT_EXTRACTION_MODEL, code_interpreter=False,
                                             user_prompt_list=[prompt + response], response_total_list=[],
                                             logprobs=False)
     return extract_equation
@@ -2579,7 +2583,7 @@ def extract_equation_with_GPT4_2048(response):
              'Note that if you find no final answer is answered, then directly answer <<<0>>>. If the initial answer follows wrong format, then correct it.\n' \
              'Input text: '
 
-    extract_equation = GPT_response('', prompt + response, model_name='gpt-4o', code_interpreter=False,
+    extract_equation = GPT_response('', prompt + response, model_name=DEFAULT_EXTRACTION_MODEL, code_interpreter=False,
                                             user_prompt_list=[prompt + response], response_total_list=[],
                                             logprobs=False)
     return extract_equation
@@ -2651,7 +2655,7 @@ def extract_equation_with_GPT4_pooling(response):
              'Note that if you find no final answer is answered, then directly answer <<<0>>>. If the initial answer follows wrong format, then correct it.\n' \
              'Input text: '
 
-    extract_equation = GPT_response('', prompt + response, model_name='gpt-4o', code_interpreter=False,
+    extract_equation = GPT_response('', prompt + response, model_name=DEFAULT_EXTRACTION_MODEL, code_interpreter=False,
                                             user_prompt_list=[prompt + response], response_total_list=[],
                                             logprobs=False)
     return extract_equation
@@ -2772,7 +2776,7 @@ def extract_equation_with_GPT4_constrained(response):
              'Note that if you find no final answer is answered, then directly answer <<<0>>>. If the initial answer follows wrong format, then correct it.\n' \
              'Input text: '
 
-    extract_equation = GPT_response('', prompt + response, model_name='gpt-4o', code_interpreter=False,
+    extract_equation = GPT_response('', prompt + response, model_name=DEFAULT_EXTRACTION_MODEL, code_interpreter=False,
                                     user_prompt_list=[prompt + response], response_total_list=[],
                                     logprobs=False)
     return extract_equation
@@ -2869,7 +2873,7 @@ def extract_equation_with_GPT4_logic_puzzle(response):
              'If the input text does not have <<<>>> and is already the pure answer, add <<<>>> and return your answer.\n' \
              'Note that if you find no final answer is answered, then directly answer <<<0 0>>. If the initial answer follows wrong format, then correct it.\n' \
              'Input text: '
-    extract_equation = GPT_response('', prompt + response, model_name='gpt-4o', code_interpreter=False,
+    extract_equation = GPT_response('', prompt + response, model_name=DEFAULT_EXTRACTION_MODEL, code_interpreter=False,
                                     user_prompt_list=[prompt + response], response_total_list=[],
                                     logprobs=False)
     return extract_equation
@@ -2921,7 +2925,7 @@ def extract_equation_with_GPT4_pattern_recognition(response):
              'Note that if you find no final answer is answered, then directly answer <<<0,0>>>. If the initial answer follows wrong format, then correct it.\n' \
              'Input text: ' \
 
-    extract_equation = GPT_response('', prompt + response, model_name='gpt-4o', code_interpreter=False, user_prompt_list = [prompt + response], response_total_list = [], logprobs = False)
+    extract_equation = GPT_response('', prompt + response, model_name=DEFAULT_EXTRACTION_MODEL, code_interpreter=False, user_prompt_list = [prompt + response], response_total_list = [], logprobs = False)
     return extract_equation
 
 def validate_solution_pattern_recognition(response: str, solution_data: list) -> Tuple[bool, str]:
@@ -2987,7 +2991,7 @@ def extract_equation_with_GPT4_string_insertion(response):
              'Note that if you find no final answer is answered, then directly answer <<<>>>. If the initial answer follows wrong format, then correct it.\n' \
              'Input text: ' \
 
-    extract_equation = GPT_response('', prompt + response, model_name='gpt-4o', code_interpreter=False, user_prompt_list = [prompt + response], response_total_list = [], logprobs = False)
+    extract_equation = GPT_response('', prompt + response, model_name=DEFAULT_EXTRACTION_MODEL, code_interpreter=False, user_prompt_list = [prompt + response], response_total_list = [], logprobs = False)
     return extract_equation
 
 def validate_solution_string_insertion(response: str, solution_data: str) -> Tuple[bool, str]:
@@ -3052,7 +3056,7 @@ def extract_equation_with_GPT4_letter_logic_diagram(response):
              'Note that if you find no final answer is answered, then directly answer <<<[]>>>. If the initial answer follows wrong format, then correct it.\n' \
              'Input text: ' \
 
-    extract_equation = GPT_response('', prompt + response, model_name='gpt-4o', code_interpreter=False, user_prompt_list = [prompt + response], response_total_list = [], logprobs = False)
+    extract_equation = GPT_response('', prompt + response, model_name=DEFAULT_EXTRACTION_MODEL, code_interpreter=False, user_prompt_list = [prompt + response], response_total_list = [], logprobs = False)
     return extract_equation
 
 def validate_solution_letter_logic_diagram(
@@ -3135,7 +3139,7 @@ def extract_equation_with_GPT4_string_synthesis(response):
              'Note that if you find no final answer is answered, then directly answer <<<>>>. If the initial answer follows wrong format, then correct it.\n' \
              'Input text: ' \
 
-    extract_equation = GPT_response('', prompt + response, model_name='gpt-4o', code_interpreter=False, user_prompt_list = [prompt + response], response_total_list = [], logprobs = False)
+    extract_equation = GPT_response('', prompt + response, model_name=DEFAULT_EXTRACTION_MODEL, code_interpreter=False, user_prompt_list = [prompt + response], response_total_list = [], logprobs = False)
     return extract_equation
 
 def validate_solution_string_synthesis(
@@ -3209,7 +3213,7 @@ def extract_equation_with_GPT4_standard_sudoku(response):
              'Note that if you find no final answer is answered, then directly answer <<<>>>. If the initial answer follows wrong format, then correct it.\n' \
              'Input text: ' \
 
-    extract_equation = GPT_response('', prompt + response, model_name='gpt-4o', code_interpreter=False, user_prompt_list = [prompt + response], response_total_list = [], logprobs = False)
+    extract_equation = GPT_response('', prompt + response, model_name=DEFAULT_EXTRACTION_MODEL, code_interpreter=False, user_prompt_list = [prompt + response], response_total_list = [], logprobs = False)
     return extract_equation
 
 def check_sudoku_solution(
@@ -3315,7 +3319,7 @@ def extract_equation_with_GPT4_permutations_and_combinations(response):
              'Note that if you find no final answer is answered, then directly answer <<<[]>>>. If the initial answer follows wrong format, then correct it.\n' \
              'Input text: ' \
 
-    extract_equation = GPT_response('', prompt + response, model_name='gpt-4o', code_interpreter=False, user_prompt_list = [prompt + response], response_total_list = [], logprobs = False)
+    extract_equation = GPT_response('', prompt + response, model_name=DEFAULT_EXTRACTION_MODEL, code_interpreter=False, user_prompt_list = [prompt + response], response_total_list = [], logprobs = False)
     return extract_equation
 
 def parse_constraints(constraints_text: str) -> List[Tuple]:
@@ -3570,7 +3574,7 @@ def extract_equation_with_GPT4_string_deletion_and_modification(response):
              'Note that if you find no final answer is answered, then directly answer <<<>>>. If the initial answer follows wrong format, then correct it.\n' \
              'Input text: ' \
 
-    extract_equation = GPT_response('', prompt + response, model_name='gpt-4o', code_interpreter=False, user_prompt_list = [prompt + response], response_total_list = [], logprobs = False)
+    extract_equation = GPT_response('', prompt + response, model_name=DEFAULT_EXTRACTION_MODEL, code_interpreter=False, user_prompt_list = [prompt + response], response_total_list = [], logprobs = False)
     return extract_equation
 
 def  validate_solution_string_deletion_and_modification(
@@ -3636,7 +3640,7 @@ def extract_equation_with_GPT4_minesweeper(response):
              'Note that if you find no final answer is answered, then directly answer <<<[]>>>. If the initial answer follows wrong format, then correct it.\n' \
              'Input text: ' \
 
-    extract_equation = GPT_response('', prompt + response, model_name='gpt-4o', code_interpreter=False, user_prompt_list = [prompt + response], response_total_list = [], logprobs = False)
+    extract_equation = GPT_response('', prompt + response, model_name=DEFAULT_EXTRACTION_MODEL, code_interpreter=False, user_prompt_list = [prompt + response], response_total_list = [], logprobs = False)
     return extract_equation
 
 def  validate_solution_minesweeper(
@@ -3715,7 +3719,7 @@ def extract_equation_with_GPT4_string_deletion_and_modification(response):
              'Note that if you find no final answer is answered, then directly answer <<<>>>. If the initial answer follows wrong format, then correct it.\n' \
              'Input text: ' \
 
-    extract_equation = GPT_response('', prompt + response, model_name='gpt-4o', code_interpreter=False, user_prompt_list = [prompt + response], response_total_list = [], logprobs = False)
+    extract_equation = GPT_response('', prompt + response, model_name=DEFAULT_EXTRACTION_MODEL, code_interpreter=False, user_prompt_list = [prompt + response], response_total_list = [], logprobs = False)
     return extract_equation
 
 def  validate_solution_string_deletion_and_modification(
@@ -3781,7 +3785,7 @@ def extract_equation_with_GPT4_cryptanalysis(response):
              'Note that if you find no final answer is answered, then directly answer <<<>>>. If the initial answer follows wrong format, then correct it.\n' \
              'Input text: ' \
 
-    extract_equation = GPT_response('', prompt + response, model_name='gpt-4o', code_interpreter=False, user_prompt_list = [prompt + response], response_total_list = [], logprobs = False)
+    extract_equation = GPT_response('', prompt + response, model_name=DEFAULT_EXTRACTION_MODEL, code_interpreter=False, user_prompt_list = [prompt + response], response_total_list = [], logprobs = False)
     return extract_equation
 
 def  validate_solution_cryptanalysis(
@@ -3800,12 +3804,12 @@ def  validate_solution_cryptanalysis(
 
     input_prompt_equiv_func = input_prompt_equiv_func + f'\n({solution_data}, {response}), Your answer:'
     check_response = GPT_response('Your are a helpful checker for list comparison.', input_prompt_equiv_func,
-                            model_name='gpt-4o',
+                            model_name=DEFAULT_EXTRACTION_MODEL,
                             code_interpreter=False, user_prompt_list=[input_prompt_equiv_func],
                             response_total_list=[], logprobs=False)
     while 'True' not in check_response and 'False' not in check_response:
         check_response = GPT_response('Your are a helpful checker for list comparison.', input_prompt_equiv_func,
-                                      model_name='gpt-4o',
+                                      model_name=DEFAULT_EXTRACTION_MODEL,
                                       code_interpreter=False, user_prompt_list=[input_prompt_equiv_func],
                                       response_total_list=[], logprobs=False)
     if 'True' in check_response:
@@ -3858,7 +3862,7 @@ def extract_equation_with_GPT4_string_splitting(response):
              'Note that if you find no final answer is answered, then directly answer <<<>>>. If the initial answer follows wrong format, then correct it.\n' \
              'Input text: ' \
 
-    extract_equation = GPT_response('', prompt + response, model_name='gpt-4o', code_interpreter=False, user_prompt_list = [prompt + response], response_total_list = [], logprobs = False)
+    extract_equation = GPT_response('', prompt + response, model_name=DEFAULT_EXTRACTION_MODEL, code_interpreter=False, user_prompt_list = [prompt + response], response_total_list = [], logprobs = False)
     return extract_equation
 
 def  validate_solution_string_splitting(
@@ -3891,7 +3895,7 @@ def extract_equation_with_GPT4_game24(response):
              'Here is the reponse, return your answer with the format <<<equation>>>, like <<<((7 - 4) * 11) - 9 = 24>>>. ' \
              'Input text: ' \
 
-    extract_equation = GPT_response('', prompt + response, model_name='gpt-4o', code_interpreter=False, user_prompt_list=[prompt + response], response_total_list=[], logprobs=False)
+    extract_equation = GPT_response('', prompt + response, model_name=DEFAULT_EXTRACTION_MODEL, code_interpreter=False, user_prompt_list=[prompt + response], response_total_list=[], logprobs=False)
     return extract_equation
 
 def validate_solution_game24(number_list, extracted_text):
@@ -3980,7 +3984,7 @@ def extract_equation_with_GPT4_letters(response):
              'Note that if you find no final answer are answered, then directly answer <<<Count: 0, Positions: []>>>.\n' \
              'Input text: ' \
 
-    extract_equation = GPT_response('', prompt + response, model_name='gpt-4o', code_interpreter=False, user_prompt_list = [prompt + response], response_total_list = [], logprobs=False)
+    extract_equation = GPT_response('', prompt + response, model_name=DEFAULT_EXTRACTION_MODEL, code_interpreter=False, user_prompt_list = [prompt + response], response_total_list = [], logprobs=False)
     return extract_equation
 
 def create_prompt_letters(word, target_letter):
@@ -4041,7 +4045,7 @@ def extract_equation_with_GPT4_number_multiply(response):
              'If there is equation in the answer but no final numbers, do not calculate the number by yourself.\n' \
              'Input text: ' \
 
-    extract_equation = GPT_response('', prompt + response, model_name='gpt-4o', code_interpreter=False, user_prompt_list = [prompt + response], response_total_list = [], logprobs=False)
+    extract_equation = GPT_response('', prompt + response, model_name=DEFAULT_EXTRACTION_MODEL, code_interpreter=False, user_prompt_list = [prompt + response], response_total_list = [], logprobs=False)
     return extract_equation
 
 def validate_solution_number_multiply(llm_response, target_answer):
@@ -4096,7 +4100,7 @@ def is_equiv_func_big_bench_hard(question, target_answer, response):
                               f'For instance, A and D options are not matching, which is judged as wrong! ' \
                               f'Now the question is: {question}; the tested answer is: {response}; the target answer is: {target_answer}. Your evaluation answer: '
 
-    response = GPT_response('', input_prompt_equiv_func, model_name='gpt-4o',
+    response = GPT_response('', input_prompt_equiv_func, model_name=DEFAULT_EXTRACTION_MODEL,
                             code_interpreter=False, user_prompt_list = [input_prompt_equiv_func], response_total_list = [], logprobs = False)
     return response
 
@@ -4127,7 +4131,7 @@ def extract_equation_with_GPT4_gsm(response):
              'Note that if you find no final answer is answered, then directly answer <<<No answer found>>>.\n' \
              'Input text: ' \
 
-    extract_equation = GPT_response('', prompt + response, model_name='gpt-4o', code_interpreter=False, user_prompt_list = [prompt + response], response_total_list = [], logprobs = False)
+    extract_equation = GPT_response('', prompt + response, model_name=DEFAULT_EXTRACTION_MODEL, code_interpreter=False, user_prompt_list = [prompt + response], response_total_list = [], logprobs = False)
     return extract_equation
 
 def is_equiv_func_gsm(target_answer, extracted_text):
@@ -4140,7 +4144,7 @@ def is_equiv_func_gsm(target_answer, extracted_text):
                               r'((18, -18), (18, -18), True). ' \
                               r'In the end of your response, answer <<<True>>> or <<<False>>>'
     input_prompt_equiv_func = input_prompt_equiv_func + f'\n({target_answer}, {extracted_text}), Your answer:'
-    response = GPT_response('Your are a helpful checker for math expressions.', input_prompt_equiv_func, model_name='gpt-4o',
+    response = GPT_response('Your are a helpful checker for math expressions.', input_prompt_equiv_func, model_name=DEFAULT_EXTRACTION_MODEL,
                             code_interpreter=False, user_prompt_list = [input_prompt_equiv_func], response_total_list = [], logprobs = False)
     return response
 
@@ -4207,7 +4211,7 @@ def extract_equation_with_GPT4_math_geometry(response):
              'Note that if you find no final answer is answered, then directly answer <<<No answer found>>>.\n' \
              'Input text: ' \
 
-    extract_equation = GPT_response('', prompt + response, model_name='gpt-4o', code_interpreter=False, user_prompt_list = [prompt + response], response_total_list = [], logprobs = False)
+    extract_equation = GPT_response('', prompt + response, model_name=DEFAULT_EXTRACTION_MODEL, code_interpreter=False, user_prompt_list = [prompt + response], response_total_list = [], logprobs = False)
     return extract_equation
 
 def is_equiv_func_math_geometry(target_answer, extracted_text):
@@ -4220,7 +4224,7 @@ def is_equiv_func_math_geometry(target_answer, extracted_text):
                               r'((18, -18), (18, -18), True). ' \
                               r'In the end of your response, answer <<<True>>> or <<<False>>>'
     input_prompt_equiv_func = input_prompt_equiv_func + f'\n({target_answer}, {extracted_text}), Your answer:'
-    response = GPT_response('Your are a helpful checker for math expressions.', input_prompt_equiv_func, model_name='gpt-4o',
+    response = GPT_response('Your are a helpful checker for math expressions.', input_prompt_equiv_func, model_name=DEFAULT_EXTRACTION_MODEL,
                             code_interpreter=False, user_prompt_list = [input_prompt_equiv_func], response_total_list = [], logprobs = False)
     return response
 
@@ -4250,7 +4254,7 @@ def extract_equation_with_GPT4_math_counting_and_probability(response):
              'Note that if you find no final answer is answered, then directly answer <<<No answer found>>>.\n' \
              'Input text: ' \
 
-    extract_equation = GPT_response('', prompt + response, model_name='gpt-4o', code_interpreter=False, user_prompt_list = [prompt + response], response_total_list = [], logprobs = False)
+    extract_equation = GPT_response('', prompt + response, model_name=DEFAULT_EXTRACTION_MODEL, code_interpreter=False, user_prompt_list = [prompt + response], response_total_list = [], logprobs = False)
     return extract_equation
 
 def is_equiv_func_math_counting_and_probability(target_answer, extracted_text):
@@ -4263,7 +4267,7 @@ def is_equiv_func_math_counting_and_probability(target_answer, extracted_text):
                               r'((18, -18), (18, -18), True). ' \
                               r'In the end of your response, answer <<<True>>> or <<<False>>>'
     input_prompt_equiv_func = input_prompt_equiv_func + f'\n({target_answer}, {extracted_text}), Your answer:'
-    response = GPT_response('Your are a helpful checker for math expressions.', input_prompt_equiv_func, model_name='gpt-4o',
+    response = GPT_response('Your are a helpful checker for math expressions.', input_prompt_equiv_func, model_name=DEFAULT_EXTRACTION_MODEL,
                             code_interpreter=False, user_prompt_list = [input_prompt_equiv_func], response_total_list = [], logprobs = False)
     return response
 
@@ -4332,7 +4336,7 @@ def extract_equation_with_GPT4_BoxNet_V2(response):
               'The final answer should be in the format <<<answer>>>, like <<<[{{"box1": "C1,2", "box2": "C2,3"}}, {{"box1": "C1,3", "box2": "C2,3"}}, ...]>>>.\n'
               'Return only the answer in that format.\n'
               'Input text: ')
-    extract_equation = GPT_response('', prompt + response, model_name='gpt-4o', code_interpreter=False,
+    extract_equation = GPT_response('', prompt + response, model_name=DEFAULT_EXTRACTION_MODEL, code_interpreter=False,
                                     user_prompt_list=[prompt + response], response_total_list=[], logprobs=False)
     return extract_equation
 
@@ -4560,7 +4564,7 @@ def extract_equation_with_GPT4_boxlift(response):
              'Here is the reponse, return your answer with the format <<<equation>>>, like <<<Step 1: [(185, [0, 1]), (108, [0, 1])]\nStep 2: [(184, [0, 1]), (75, [0, 1])]>>>. ' \
              'Input text: ' \
 
-    extract_equation = GPT_response('', prompt + response, model_name='gpt-4o', code_interpreter=False, user_prompt_list=[prompt + response], response_total_list=[], logprobs=False)
+    extract_equation = GPT_response('', prompt + response, model_name=DEFAULT_EXTRACTION_MODEL, code_interpreter=False, user_prompt_list=[prompt + response], response_total_list=[], logprobs=False)
     return extract_equation
 
 def verify_solution_boxlift(boxes: List[int], lifters: List[int], solution: str, estimated_steps) -> Tuple[bool, List[int]]:
@@ -4646,7 +4650,7 @@ def extract_equation_with_GPT4_blocksworld(response):
              'Note that if you find no final answer is answered, then directly answer <<<No answer found>>>.\n' \
              'Input text: ' \
 
-    extract_equation = GPT_response('', prompt + response, model_name='gpt-4o', code_interpreter=False, user_prompt_list = [prompt + response], response_total_list = [], logprobs=False)
+    extract_equation = GPT_response('', prompt + response, model_name=DEFAULT_EXTRACTION_MODEL, code_interpreter=False, user_prompt_list = [prompt + response], response_total_list = [], logprobs=False)
     return extract_equation
 
 
@@ -4802,7 +4806,7 @@ def extract_equation_with_GPT4_gridworld(response):
               'The final answer should be in the format <<<answer>>>, like <<<["C2,1","C3,1", ...]>>>.\n'
               'Return only the answer in that format.\n'
               'Input text: ')
-    extract_equation = GPT_response('', prompt + response, model_name='gpt-4o', code_interpreter=False,
+    extract_equation = GPT_response('', prompt + response, model_name=DEFAULT_EXTRACTION_MODEL, code_interpreter=False,
                                     user_prompt_list=[prompt + response], response_total_list=[], logprobs=False)
     return extract_equation
 
@@ -5213,7 +5217,7 @@ Move disk 1 from Peg 1 to Peg 3
     #              'Note that if you find no final answer are answered, then directly answer <<<>>>. Do not run the code in the input text or give an irrelevant answer.\n' \
     #              'Input text: '
 
-    extract_equation = GPT_response('', prompt + response, model_name='gpt-4o', code_interpreter=False,
+    extract_equation = GPT_response('', prompt + response, model_name=DEFAULT_EXTRACTION_MODEL, code_interpreter=False,
                                     user_prompt_list=[prompt + response], response_total_list=[], logprobs=False)
     return extract_equation
 

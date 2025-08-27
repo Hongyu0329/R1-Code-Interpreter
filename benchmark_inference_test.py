@@ -25,11 +25,16 @@ if __name__ == '__main__':
         with open(log_file, 'a') as f:
             f.write(run_info + "\n")
 
-    infer_base_path = '/path-to-R1-Code-Interpreter/R1-Code-Interpreter/LLaMA-Factory/examples/inference/' # To be filled
+    infer_base_path = '/home/hongyu/Documents/R1-Code-Interpreter/LLaMA-Factory/examples/inference/' # To be filled
 
-    for model_name, LLM_path in [['R1_CI_14B', 'R1_CI_14B.yaml']]:
-        # [['gpt-4o', ''], ['R1_CI_14B', 'R1_CI_14B.yaml'], ['R1_CI_7B', 'R1_CI_7B.yaml'], ['R1_CI_3B', 'R1_CI_3B.yaml']]
-        args_path = os.path.join(infer_base_path, LLM_path)
+    # Use NIM API models to avoid GPU memory issues
+    # Options: [['R1_CI_14B_NIM', ''], ['R1_CI_7B_NIM', ''], ['R1_CI_3B_NIM', ''], ['gpt-4o', '']]
+    # For local models: [['R1_CI_14B', 'R1_CI_14B.yaml'], ['R1_CI_7B', 'R1_CI_7B.yaml'], ['R1_CI_3B', 'R1_CI_3B.yaml']]
+    for model_name, LLM_path in [['R1_CI_14B_NIM', '']]:
+        if LLM_path:
+            args_path = os.path.join(infer_base_path, LLM_path)
+        else:
+            args_path = None  # API models don't need a config file
 
         gather_save_input_dir = 'results_gather'
         start_index = 0
